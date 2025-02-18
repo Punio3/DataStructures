@@ -32,37 +32,25 @@ void BST::addNumber(int value) {
 	}
 }
 
-void ShowLeaf(leaf* current) {
+void ShowLeafInOrder(leaf* current) {
 	if (current != nullptr) {
-		ShowLeaf(current->LeftChild);
+		ShowLeafInOrder(current->LeftChild);
 		std::cout << current->Value << " ";
 	}
-	if(current!=nullptr && current->RightChild!=nullptr) ShowLeaf(current->RightChild);
+	if(current!=nullptr && current->RightChild!=nullptr) ShowLeafInOrder(current->RightChild);
 }
 
 void BST::ShowTreeInOrder() {
-	ShowLeaf(Root);
+	ShowLeafInOrder(Root);
 	std::cout << std::endl;
 }
 
-leaf* BST::FindValue(int value) {
-	leaf* current = Root;
-	while (current->Value != value) {
-		if (current->Value < value) {
-			current = current->RightChild;
-		}
-		else {
-			current = current->LeftChild;
-		}
-	}
-	return current;
-}
-
-void BST::DeleteChildFromParent(leaf* Leaf) {
+leaf* BST::FindLeafToDelete(int value) {
 	leaf* current = Root;
 	leaf* prev = current;
-	while (current->Value != Leaf->Value) {
-		if (current->Value < Leaf->Value) {
+	//szukanie liscia o podanej wartosci
+	while (current->Value != value) {
+		if (current->Value < value) {
 			prev = current;
 			current = current->RightChild;
 		}
@@ -71,39 +59,90 @@ void BST::DeleteChildFromParent(leaf* Leaf) {
 			current = current->LeftChild;
 		}
 	}
-	if (prev->LeftChild != nullptr && prev->LeftChild->Value == Leaf->Value) prev->LeftChild = nullptr;
-	else if (prev->RightChild != nullptr && prev->RightChild->Value == Leaf->Value) prev->RightChild = nullptr;
-}
+	
 
-leaf* BST::FindConsequent(leaf* Leaf) {
-	leaf* current = Leaf;
-	if (Leaf->LeftChild == nullptr && Leaf->RightChild == nullptr) {
-		DeleteChildFromParent(current);
+	leaf* Consequent = current;
+	//usuniecie lisicia bez dzieci oraz zaaktualizowanie wskaznika u rodzica
+	if (Consequent->LeftChild == nullptr && Consequent->RightChild == nullptr) {
+		if (prev->LeftChild != nullptr && prev->LeftChild->Value == current->Value) prev->LeftChild = nullptr;
+		else if (prev->RightChild != nullptr && prev->RightChild->Value == current->Value) prev->RightChild = nullptr;
 		return current;
 	}
 
+	//szukanie nastepnika i aktualizowanie wskaznikow 
 	while (true) {
-		if (current->RightChild == nullptr) {
-			current = current->LeftChild;
-			if (current->RightChild == nullptr) {
-				Leaf->LeftChild = current->LeftChild;
-				Leaf->Value = current->Value;
-				return current;
+		if (Consequent->RightChild == nullptr) {
+			Consequent = Consequent->LeftChild;
+			if (Consequent->RightChild == nullptr) {
+				current->LeftChild = Consequent->LeftChild;
+				current->Value = Consequent->Value;
+				return Consequent;
 			}
 		}
 		else {
-			current = current->RightChild;
-			if (current->LeftChild == nullptr) {
-				Leaf->RightChild = current->RightChild;
-				Leaf->Value = current->Value;
-				return current;
+			Consequent = Consequent->RightChild;
+			if (Consequent->LeftChild == nullptr) {
+				current->RightChild = Consequent->RightChild;
+				current->Value = Consequent->Value;
+				return Consequent;
 			}
 		}
 	}
-
 }
 
 void BST::DeleteNumber(int value) {
-	leaf* tmp=FindConsequent(FindValue(value));
+	leaf* tmp = FindLeafToDelete(value);
 	delete(tmp); 
+}
+
+
+void ShowLeafPostOrder(leaf* current) {
+	if (current != nullptr) {
+		ShowLeafPostOrder(current->LeftChild);
+		ShowLeafPostOrder(current->RightChild);
+		std::cout << current->Value << " ";
+	}
+}
+
+void BST::ShowTreeInPostOrder() {
+	ShowLeafPostOrder(Root);
+	std::cout << std::endl;
+}
+
+void ShowLeafPreOrder(leaf* current) {
+	if (current != nullptr) {
+		std::cout << current->Value << " ";
+		ShowLeafPreOrder(current->LeftChild);
+		ShowLeafPreOrder(current->RightChild);
+	}
+}
+
+void BST::ShowTreeInPreOrder() {
+	ShowLeafPreOrder(Root);
+	std::cout << std::endl;
+}
+
+void BST::BFS() {
+	Queue queue = Queue();
+	leaf* PoppedLeaf;
+	queue.push(Root);
+	while (queue.Size != 0) {
+		PoppedLeaf = queue.pop();
+		if (PoppedLeaf->LeftChild != nullptr) queue.push(PoppedLeaf->LeftChild);
+		if (PoppedLeaf->RightChild != nullptr) queue.push(PoppedLeaf->RightChild);
+		std::cout << PoppedLeaf->Value << " ";
+	}
+	std::cout << std::endl;
+}
+
+void DeleteLeaf(leaf* current) {
+	if (current != nullptr) {
+		DeleteLeaf(current->LeftChild);
+		DeleteLeaf(current->RightChild);
+		delete(current);
+	}
+}
+
+BST::~BST() {
+	DeleteLeaf(Root);
 }

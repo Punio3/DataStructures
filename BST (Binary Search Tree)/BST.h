@@ -1,4 +1,5 @@
-#include "leaf.h"
+#pragma once
+#include "Queue.h"
 
 class BST {
 public:
@@ -8,8 +9,10 @@ public:
 	BST();
 	void addNumber(int value);
 	void ShowTreeInOrder();
-	leaf* FindValue(int value);
-	leaf* FindConsequent(leaf* leaf);
+	leaf* FindLeafToDelete(int value);
 	void DeleteNumber(int value);
-	void DeleteChildFromParent(leaf* Leaf);
+	void ShowTreeInPostOrder();
+	void ShowTreeInPreOrder();
+	void BFS();
+	~BST();
 };

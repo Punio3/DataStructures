@@ -3,7 +3,7 @@
 using namespace std;
 
 void DisplayOperations() {
-	cout << "1)Dodaj wartosc\n2)Usun wartosc\n3)Wyswietl In Order\n";
+	cout << "1)Dodaj wartosc\n2)Usun wartosc\n3)Wyswietl InOrder\n4)Wyswietl PreOrder\n5)Wyswietl PostOrder\n6)Wyswietl BFS\n7)Usuniecie struktury\n";
 }
 
 void OperationLoopInTree() {
@@ -26,6 +26,19 @@ void OperationLoopInTree() {
 				break;
 			case 3:
 				BinarySearchTree.ShowTreeInOrder();
+				break;
+			case 4:
+				BinarySearchTree.ShowTreeInPreOrder();
+				break;
+			case 5:
+				BinarySearchTree.ShowTreeInPostOrder();
+				break;
+			case 6:
+				BinarySearchTree.BFS();
+				break;
+			case 7:
+				BinarySearchTree.~BST();
+				break;
 		}
 	}
 }
