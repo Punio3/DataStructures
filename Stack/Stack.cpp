@@ -50,3 +50,7 @@ void Stack::ShowStack() {
 		iterator++;
 	}
 }
+
+char Stack::Peek() {
+	return Top->character;
+}

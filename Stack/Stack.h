@@ -11,4 +11,5 @@ public:
 	char pop();
 	void Delete();
 	void ShowStack();
+	char Peek();
 };

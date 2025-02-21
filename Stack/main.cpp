@@ -39,8 +39,65 @@ void GameLoop() {
 	}
 }
 
+bool CompareToCharacters(char first, char second) {
+	if (first == '(') {
+		if (second == ')') return true;
+		else return false;
+	}
+	else if (first == '[') {
+		if (second == ']') return true;
+		else return false;
+	}
+	else if (first == '{') {
+		if (second == '}') return true;
+		else return false;
+	}
+}
+
+void SzukaniePoprawnychNawiasow() {
+	string CiagZnakow;
+	Stack stack;
+
+	cout << "Podaj ciag znakow: ";
+	cin >> CiagZnakow;
+
+	for (char x : CiagZnakow) {
+		if (x == '}' || x == ']' || x == ')') {
+			if (stack.Size == 0) {
+				cout << "Bledny ciag nawiasow" << endl;
+				stack.Delete();
+				return;
+			}
+			else {
+				if (CompareToCharacters(stack.Peek(), x)) {
+					stack.pop();
+				}
+				else {
+					cout << "Bledny ciag znakow"<<endl;
+					stack.Delete();
+					return;
+				}
+			}
+		}
+		else if(x == '{' || x == '(' || x == '['){
+			stack.push(x);
+		}
+	}
+	if (stack.Size == 0) {
+		cout << "Poprawny ciag znakow" << endl;
+	}
+	else {
+		cout << "Bledny ciag znakow" << endl;
+	}
+	stack.Delete();
+}
+
+
 int main()
 {
-	GameLoop();
+	//GameLoop();
+	while (true) {
+		SzukaniePoprawnychNawiasow();
+	}
 }
 
